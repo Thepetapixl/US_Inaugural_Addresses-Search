@@ -36,7 +36,7 @@ for token in set([token for tokens in doc_tokens.values() for token in tokens]):
 
 def calculate_weights(flag):
     ''' Function to calculate tf-idf score weights 
-        of the word in the corpus '''
+    of the word in the corpus '''
     
     doc_weights = {}
     for filename, tokens in doc_tokens.items():
@@ -58,7 +58,7 @@ def calculate_weights(flag):
 
 def query(qstring):
     ''' Processes a search query to determine the most relevant document 
-        based on TF-IDF and cosine similarity. '''
+    based on TF-IDF and cosine similarity. '''
     
     tokens = [stemmer.stem(token.lower()) for token in tokenizer.tokenize(qstring) if token.lower() not in stop_words]
     
@@ -120,14 +120,15 @@ def query(qstring):
 @app.route('/')
 def index():
     ''' Routes you to the home page and 
-        handles the search and results '''
+    handles the search and results '''
     
     return render_template('index.html')
 
 @app.route('/search', methods=['POST'])
+
 def search():
     ''' Handles the search query 
-        i.e. processing the user's search query '''
+    i.e. processing the user's search query '''
     
     query_string = request.form['query']
     if not query_string:
