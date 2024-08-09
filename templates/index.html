@@ -90,6 +90,8 @@
             This tool is particularly valuable for historians, researchers, and anyone interested in exploring the
             rhetoric and themes of US presidents over the years.
         </p>
+        <h2>Explore Inaugural Addresses</h2>
+        <p>View the full list of inaugural addresses on our <a href="https://github.com/Thepetapixl/US_Inaugural_Addresses-Search/tree/main/US_Inaugural_Addresses">GitHub repository</a>.</p>
         <div class="search-container">
             <form action="/search" method="post">
                 <input type="text" name="query" placeholder="Search inaugural addresses..." required>
@@ -98,16 +100,21 @@
         </div>
         <div class="results-container">
             {% if result %}
-                <h2>Search Results for "{{ request.form.get('query') }}"</h2>
+                <h2>Search Results for "{{ query }}"</h2>
                 <div class="result-item">
-                    <h3>{{ result }}</h3>
-                    <p><strong>Relevance:</strong> {{ score }}</p>
-                    <p>{{ text }}</p>
+                    <h3>{{ result.file_name }}</h3>
+                    <p><strong>Relevance:</strong> {{ result.score }}</p>
+                    <p>{{ result.excerpt }}</p>
                 </div>
+                <p>{{ inference }}</p>
+            {% elif error %}
+                <h2>Error</h2>
+                <p>{{ error }}</p>
             {% else %}
                 <h2>No Results Found</h2>
             {% endif %}
         </div>
+        
     </main>
     <footer>
         <p>&copy; 2024 US Inaugural Addresses Search Engine. All rights reserved.</p>
