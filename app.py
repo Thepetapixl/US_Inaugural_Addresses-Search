@@ -71,15 +71,17 @@ def query(qstring):
     
     query_tf_idf = {}
     for token, weight in query_weights.items():
-        query_idf = getidf(token)
-        query_idf = 0 if query_idf == -1 else query_idf
+        query_idf = idf.get(token, 0)
         query_tf_idf[token] = weight * query_idf
 
     query_mag = sum([weight * weight for weight in query_tf_idf.values()])
     query_mag = math.sqrt(query_mag)
 
-    for val in query_tf_idf:
-        query_tf_idf[val] = query_tf_idf[val] / query_mag
+    if query_mag == 0:
+        return None, None, "Query magnitude is zero. Please enter a different query."
+
+    for token in query_tf_idf:
+        query_tf_idf[token] = query_tf_idf[token] / query_mag
     
     doc_mag = {}
     doc_weights = calculate_weights(False)
@@ -91,7 +93,7 @@ def query(qstring):
         mag_doc = doc_mag[doc]
         for t, v in vals.items():
             doc_weights[doc][t] = v / mag_doc
-     
+
     for filename in doc_weights:
         for token in query_tf_idf:
             if token in doc_weights[filename]:
@@ -99,33 +101,38 @@ def query(qstring):
 
     sorted_values = sorted(values.items(), key=lambda x: x[1], reverse=True)
 
-    results = []
-    for filename, score in sorted_values[:5]:  # Show top 5 results
-        excerpt = ' '.join(docs[filename].split()[:50])  # Extract a snippet from the document
-        results.append({
-            'file_name': filename,
-            'score': score,
-            'excerpt': excerpt
-        })
+    if not sorted_values:
+        return None, None, "No results found for your query."
 
-    return results
+    top_match = sorted_values[0][0]
+    top_score = sorted_values[0][1]
 
-def getidf(token):
-    return idf[token] if token in idf else -1
+    inference = (
+        f"The document '{top_match}' is most relevant to your query. "
+        f"This relevance score is based on the similarity between your search terms "
+        f"and the content of the document, taking into account how often your search terms appear in the text "
+        f"and their significance across all documents."
+    )
 
-# Flask routes
-@app.route('/', methods=['GET'])
+    return top_match, top_score, inference
+
+@app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/search', methods=['POST'])
 def search():
-    query_string = request.form.get('query', '').strip()
-    if query_string:
-        results = query(query_string)
-        return render_template('index.html', results=results)
+    query_string = request.form['query']
+    if not query_string:
+        return render_template('index.html', error="Invalid query. Please enter a valid search term.")
+    
+    result_doc, score, inference = query(query_string)
+    
+    if result_doc:
+        excerpt = docs[result_doc]
+        return render_template('index.html', query=query_string, result={'file_name': result_doc, 'score': score, 'excerpt': excerpt}, inference=inference)
     else:
-        return render_template('index.html', results=[])
+        return render_template('index.html', error=f"'{query_string}' does not exist in the documents. Please try a different query.")
 
 if __name__ == '__main__':
     app.run(debug=True)
