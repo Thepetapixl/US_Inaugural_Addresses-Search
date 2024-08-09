@@ -3,19 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Search Engine</title>
+    <title>US Inaugural Addresses Search Engine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #0073e6;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        main {
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        p {
+            line-height: 1.6;
+            color: #555;
+        }
+        .search-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .search-container input[type="text"] {
+            padding: 10px;
+            width: 60%;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .search-container input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .search-container input[type="submit"]:hover {
+            background-color: #005bb5;
+        }
+        .results-container {
+            margin-top: 40px;
+        }
+        .result-item {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .result-item h3 {
+            color: #0073e6;
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #aaa;
+        }
+    </style>
 </head>
 <body>
-    <h1>Search Engine</h1>
-    <form method="POST">
-        <input type="text" name="query" placeholder="Enter your query" required>
-        <button type="submit">Search</button>
-    </form>
-    {% if result %}
-        <h2>Top Result:</h2>
-        <p>Document: {{ result }}</p>
-        <p>Score: {{ score }}</p>
-        <p>{{ inference }}</p>
-    {% endif %}
+    <header>
+        <h1>US Inaugural Addresses Search Engine</h1>
+    </header>
+    <main>
+        <h2>About This Project</h2>
+        <p>
+            This project is a search engine specifically designed to explore the inaugural addresses of US presidents.
+            By leveraging Natural Language Processing (NLP) techniques, it allows users to find relevant content
+            within these historical speeches based on their search queries.
+        </p>
+        <p>
+            The search results are ranked based on their relevance, using a method called "cosine similarity."
+            This measures how closely the content of a speech matches the user's query. The higher the similarity score,
+            the more relevant the speech is considered to be.
+        </p>
+        <p>
+            This tool is particularly valuable for historians, researchers, and anyone interested in exploring the
+            rhetoric and themes of US presidents over the years.
+        </p>
+        <div class="search-container">
+            <form action="/search" method="post">
+                <input type="text" name="query" placeholder="Search inaugural addresses..." required>
+                <input type="submit" value="Search">
+            </form>
+        </div>
+        <div class="results-container">
+            {% if results %}
+                <h2>Search Results</h2>
+                {% for result in results %}
+                <div class="result-item">
+                    <h3>{{ result.file_name }}</h3>
+                    <p><strong>Relevance:</strong> {{ result.score }}</p>
+                    <p>{{ result.excerpt }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <h2>No Results Found</h2>
+            {% endif %}
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 US Inaugural Addresses Search Engine. All rights reserved.</p>
+    </footer>
 </body>
 </html>
