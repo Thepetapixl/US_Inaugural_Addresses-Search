@@ -6,12 +6,11 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.stem import PorterStemmer
 import nltk
 
-# Download NLTK stopwords
+stopwords
 nltk.download('stopwords')
 
 app = Flask(__name__)
 
-# Global variables
 N = 0
 corpusroot = './US_Inaugural_Addresses/'
 docs = {}
