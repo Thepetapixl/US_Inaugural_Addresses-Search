@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Search Engine</title>
+</head>
+<body>
+    <h1>Search Engine</h1>
+    <form method="POST">
+        <input type="text" name="query" placeholder="Enter your query" required>
+        <button type="submit">Search</button>
+    </form>
+    {% if result %}
+        <h2>Top Result:</h2>
+        <p>Document: {{ result }}</p>
+        <p>Score: {{ score }}</p>
+        <p>{{ inference }}</p>
+    {% endif %}
+</body>
+</html>
