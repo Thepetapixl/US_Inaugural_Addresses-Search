@@ -15,7 +15,6 @@ N = 0
 corpusroot = './US_Inaugural_Addresses/'
 docs = {}
 
-# Load and process documents
 for filename in os.listdir(corpusroot):
     if filename.startswith('0') or filename.startswith('1'):
         with open(os.path.join(corpusroot, filename), "r", encoding='windows-1252') as doc:
