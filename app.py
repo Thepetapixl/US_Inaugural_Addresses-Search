@@ -21,7 +21,6 @@ for filename in os.listdir(corpusroot):
             N += 1
 
 # Tokenize and stem the documents
-
 stop_words = set(stopwords.words('english'))
 tokenizer = RegexpTokenizer(r'[a-zA-Z]+')
 stemmer = PorterStemmer()
@@ -35,10 +34,10 @@ for token in set([token for tokens in doc_tokens.values() for token in tokens]):
     df = sum([1 for tokens in doc_tokens.values() if token in tokens])
     idf[token] = math.log10(N / df)
 
-
 def calculate_weights(flag):
     ''' Function to calculate tf-idf score weights 
-            of the word in the corpus'''
+        of the word in the corpus '''
+    
     doc_weights = {}
     for filename, tokens in doc_tokens.items():
         tf = {}
@@ -59,7 +58,8 @@ def calculate_weights(flag):
 
 def query(qstring):
     ''' Processes a search query to determine the most relevant document 
-                based on TF-IDF and cosine similarity. '''
+        based on TF-IDF and cosine similarity. '''
+    
     tokens = [stemmer.stem(token.lower()) for token in tokenizer.tokenize(qstring) if token.lower() not in stop_words]
     
     query_weights = {}
@@ -119,7 +119,6 @@ def query(qstring):
 
 @app.route('/')
 def index():
-
     ''' Routes you to the home page and 
         handles the search and results '''
     
@@ -127,9 +126,8 @@ def index():
 
 @app.route('/search', methods=['POST'])
 def search():
-
     ''' Handles the search query 
-    i.e. processing the user's search query '''
+        i.e. processing the user's search query '''
     
     query_string = request.form['query']
     if not query_string:
