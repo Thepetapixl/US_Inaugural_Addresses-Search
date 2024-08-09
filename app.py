@@ -57,8 +57,8 @@ def calculate_weights(flag):
     return doc_weights
 
 def query(qstring):
-    ''' Processes a search query to determine the most relevant document 
-    based on TF-IDF and cosine similarity. '''
+    ''' Processes a search query to determine the most relevant 
+    document based on TF-IDF and cosine similarity. '''
     
     tokens = [stemmer.stem(token.lower()) for token in tokenizer.tokenize(qstring) if token.lower() not in stop_words]
     
