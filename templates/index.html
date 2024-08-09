@@ -97,13 +97,16 @@
             </form>
         </div>
         <div class="results-container">
+            {% if query %}
+                <h2>{{ query }}</h2>
+            {% endif %}
             {% if results %}
                 <h2>Search Results</h2>
                 {% for result in results %}
                 <div class="result-item">
                     <h3>{{ result.file_name }}</h3>
                     <p><strong>Relevance:</strong> {{ result.score }}</p>
-                    <p>{{ result.excerpt }}</p>
+                    <p>{{ result.text }}</p>
                 </div>
                 {% endfor %}
             {% else %}
