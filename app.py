@@ -99,29 +99,33 @@ def query(qstring):
 
     sorted_values = sorted(values.items(), key=lambda x: x[1], reverse=True)
 
-    top_match = sorted_values[0][0]
-    top_score = sorted_values[0][1]
+    results = []
+    for filename, score in sorted_values[:5]:  # Show top 5 results
+        excerpt = ' '.join(docs[filename].split()[:50])  # Extract a snippet from the document
+        results.append({
+            'file_name': filename,
+            'score': score,
+            'excerpt': excerpt
+        })
 
-    inference = (
-        f"The document '{top_match}' is most relevant to your query. "
-        f"This relevance score is based on the similarity between your search terms "
-        f"and the content of the document, taking into account how often your search terms appear in the text "
-        f"and their significance across all documents."
-    )
-
-    return top_match, top_score, inference
+    return results
 
 def getidf(token):
     return idf[token] if token in idf else -1
 
 # Flask routes
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def index():
-    if request.method == 'POST':
-        query_string = request.form.get('query')
-        result_doc, score, inference = query(query_string)
-        return render_template('index.html', query=query_string, result=result_doc, score=score, inference=inference)
     return render_template('index.html')
+
+@app.route('/search', methods=['POST'])
+def search():
+    query_string = request.form.get('query', '').strip()
+    if query_string:
+        results = query(query_string)
+        return render_template('index.html', results=results)
+    else:
+        return render_template('index.html', results=[])
 
 if __name__ == '__main__':
     app.run(debug=True)
