@@ -57,14 +57,6 @@ The US Inaugural Addresses Search Engine is a web application designed to explor
 2. Review the search results which display the relevance and an excerpt from the speeches.
 3. Click on the links to access the full text of the documents.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For questions or feedback, please reach out to [apurvvidhate40@gmail.com](mailto:apurvvidhate40@gmail.com).
-
 ## Repository
 
 Access the full dataset of inaugural addresses here: [US Inaugural Addresses Repository](https://github.com/Thepetapixl/US_Inaugural_Addresses-Search/tree/main)
