@@ -6,7 +6,6 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.stem import PorterStemmer
 import nltk
 
-stopwords
 nltk.download('stopwords')
 
 app = Flask(__name__)
@@ -21,7 +20,7 @@ for filename in os.listdir(corpusroot):
             docs[filename] = doc.read()
             N += 1
 
-''' Tokenize and stem the documents '''
+# Tokenize and stem the documents
 
 stop_words = set(stopwords.words('english'))
 tokenizer = RegexpTokenizer(r'[a-zA-Z]+')
@@ -38,7 +37,8 @@ for token in set([token for tokens in doc_tokens.values() for token in tokens]):
 
 
 def calculate_weights(flag):
-    ''' Function to calculate weights '''
+    ''' Function to calculate tf-idf score weights 
+            of the word in the corpus'''
     doc_weights = {}
     for filename, tokens in doc_tokens.items():
         tf = {}
@@ -58,7 +58,8 @@ def calculate_weights(flag):
     return doc_weights
 
 def query(qstring):
-    ''' Function to process the query '''
+    ''' Processes a search query to determine the most relevant document 
+                based on TF-IDF and cosine similarity. '''
     tokens = [stemmer.stem(token.lower()) for token in tokenizer.tokenize(qstring) if token.lower() not in stop_words]
     
     query_weights = {}
@@ -116,16 +117,20 @@ def query(qstring):
 
     return top_match, top_score, inference
 
-''' Routes you to the home page and handles the search and results'''
-
 @app.route('/')
 def index():
-    return render_template('index.html')
 
-''' Handles the search query i.e. processing the user's search query '''
+    ''' Routes you to the home page and 
+        handles the search and results '''
+    
+    return render_template('index.html')
 
 @app.route('/search', methods=['POST'])
 def search():
+
+    ''' Handles the search query 
+    i.e. processing the user's search query '''
+    
     query_string = request.form['query']
     if not query_string:
         return render_template('index.html', error="Invalid query. Please enter a valid search term.")
