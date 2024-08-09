@@ -21,7 +21,8 @@ for filename in os.listdir(corpusroot):
             docs[filename] = doc.read()
             N += 1
 
-# Tokenize and stem the documents
+''' Tokenize and stem the documents '''
+
 stop_words = set(stopwords.words('english'))
 tokenizer = RegexpTokenizer(r'[a-zA-Z]+')
 stemmer = PorterStemmer()
@@ -35,8 +36,9 @@ for token in set([token for tokens in doc_tokens.values() for token in tokens]):
     df = sum([1 for tokens in doc_tokens.values() if token in tokens])
     idf[token] = math.log10(N / df)
 
-# Function to calculate weights
+
 def calculate_weights(flag):
+    ''' Function to calculate weights '''
     doc_weights = {}
     for filename, tokens in doc_tokens.items():
         tf = {}
@@ -55,8 +57,8 @@ def calculate_weights(flag):
                 doc_weights[filename][token] = weight 
     return doc_weights
 
-# Function to process the query
 def query(qstring):
+    ''' Function to process the query '''
     tokens = [stemmer.stem(token.lower()) for token in tokenizer.tokenize(qstring) if token.lower() not in stop_words]
     
     query_weights = {}
@@ -114,9 +116,13 @@ def query(qstring):
 
     return top_match, top_score, inference
 
+''' Routes you to the home page and handles the search and results'''
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
+''' Handles the search query i.e. processing the user's search query '''
 
 @app.route('/search', methods=['POST'])
 def search():
